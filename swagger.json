@@ -189,8 +189,9 @@
                   },
                   "completionDate": {
                     "type": "string",
-                    "format": "date",
-                    "description": "ISO 8601 date, e.g. 2026-10-12"
+                    "format": "date-time",
+                    "description": "ISO 8601 date",
+                    "example": "2026-10-12T00:00:00.000Z"
                   }
                 }
               }
