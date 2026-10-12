@@ -1,0 +1,341 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "4Corners Tracking API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://4cornersbackend-{stage}.tiger-bytez.com",
+      "variables": {
+        "stage": {
+          "default": "prod",
+          "enum": ["prod", "dev"]
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/tracking/poll/{solicitorID}": {
+      "get": {
+        "summary": "Poll property onboarding data for a solicitor",
+        "operationId": "pollTracking",
+        "tags": ["Tracking"],
+        "security": [
+          {
+            "AuthorizationHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "solicitorID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Property onboarding data sets for the solicitor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActionstepPropertyOnboardingPollData"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "AuthorizationHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    },
+    "schemas": {
+      "ActionstepPropertyOnboardingPollData": {
+        "type": "object",
+        "required": ["deal_type"],
+        "properties": {
+          "deal_type": {
+            "type": "string",
+            "enum": [
+              "Sale",
+              "Purchase",
+              "Sale & Purchase",
+              "Remortgage",
+              "Transfer of Equity",
+              "ILA"
+            ]
+          },
+          "deal_id": {
+            "type": "string"
+          },
+          "fileReference": {
+            "type": "string"
+          },
+          "tmInstructionID": {
+            "type": "string"
+          },
+          "tmConnectActionstepToken": {
+            "type": "string"
+          },
+          "tmPanelIdentifier": {
+            "type": "string"
+          },
+          "instruction_note": {
+            "type": "string"
+          },
+          "event": {
+            "type": "string",
+            "enum": [
+              "instruction",
+              "repanneled_instruction",
+              "update",
+              "repannaled_away_instruction"
+            ]
+          },
+          "requoted_instruction": {
+            "type": "boolean"
+          },
+          "quote_pdf": {
+            "type": "string"
+          },
+          "quote_pdf_s3key": {
+            "type": "string"
+          },
+          "client_details": {
+            "type": "object",
+            "required": ["1", "number_of_clients"],
+            "properties": {
+              "1": {
+                "$ref": "#/components/schemas/PropertyClientData"
+              },
+              "2": {
+                "$ref": "#/components/schemas/PropertyClientData"
+              },
+              "3": {
+                "$ref": "#/components/schemas/PropertyClientData"
+              },
+              "4": {
+                "$ref": "#/components/schemas/PropertyClientData"
+              },
+              "5": {
+                "$ref": "#/components/schemas/PropertyClientData"
+              },
+              "6": {
+                "$ref": "#/components/schemas/PropertyClientData"
+              },
+              "7": {
+                "$ref": "#/components/schemas/PropertyClientData"
+              },
+              "8": {
+                "$ref": "#/components/schemas/PropertyClientData"
+              },
+              "number_of_clients": {
+                "type": "string",
+                "description": "Number of clients as a string, e.g. \"2\""
+              }
+            }
+          },
+          "transaction_details": {
+            "type": "object",
+            "required": ["tenure", "transaction_address_data"],
+            "properties": {
+              "tenure": {
+                "type": "string",
+                "enum": ["Leasehold", "Freehold"]
+              },
+              "property_value": {
+                "type": "string"
+              },
+              "transaction_address_data": {
+                "type": "object",
+                "required": ["postcode", "number", "street", "city", "county"],
+                "properties": {
+                  "postcode": {
+                    "type": "string"
+                  },
+                  "number": {
+                    "type": "string"
+                  },
+                  "street": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "county": {
+                    "type": "string"
+                  }
+                }
+              },
+              "estate_agent_data": {
+                "type": "object",
+                "required": [
+                  "property_estate_agent",
+                  "estate_agency",
+                  "estate_agency_email",
+                  "estate_agency_phone"
+                ],
+                "properties": {
+                  "property_estate_agent": {
+                    "type": "boolean"
+                  },
+                  "estate_agency": {
+                    "type": "string"
+                  },
+                  "estate_agency_email": {
+                    "type": "string"
+                  },
+                  "estate_agency_phone": {
+                    "type": "string"
+                  }
+                }
+              },
+              "branch": {
+                "type": "object",
+                "required": ["name", "email"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "quote_details": {
+            "type": "object",
+            "required": ["quote_fees"],
+            "properties": {
+              "quote_fees": {
+                "type": "object",
+                "required": ["vat", "total"],
+                "properties": {
+                  "vat": {
+                    "type": "string"
+                  },
+                  "total": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "instruction_fee_data": {
+            "type": "object",
+            "required": ["legal_fees_total", "additional_fees_total"],
+            "properties": {
+              "legal_fees_total": {
+                "type": "string"
+              },
+              "legalFeesTimeKeeperID": {
+                "type": "string"
+              },
+              "additional_fees_total": {
+                "type": "string"
+              },
+              "additional_fees": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Fee"
+                }
+              },
+              "disbursements": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Fee"
+                }
+              },
+              "referralFee": {
+                "type": "number"
+              }
+            }
+          },
+          "feeEarnerEmail": {
+            "type": "string"
+          },
+          "legalAssistantEmail": {
+            "type": "string"
+          },
+          "referrerName": {
+            "type": "string"
+          }
+        }
+      },
+      "PropertyClientData": {
+        "type": "object",
+        "required": ["first_name", "last_name"],
+        "properties": {
+          "first_name": {
+            "type": "string"
+          },
+          "middle_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "postcode": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "street": {
+            "type": "string"
+          },
+          "suburb": {
+            "type": "string"
+          }
+        }
+      },
+      "Fee": {
+        "type": "object",
+        "required": ["name", "fee"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "fee": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}
