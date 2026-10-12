@@ -55,6 +55,82 @@
           }
         }
       }
+    },
+    "/tracking/accept/{solicitorID}/{deal_id}": {
+      "post": {
+        "summary": "Accept an instruction for a solicitor",
+        "operationId": "acceptInstruction",
+        "tags": ["Tracking"],
+        "security": [
+          {
+            "AuthorizationHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "solicitorID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "deal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Instruction accepted"
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header"
+          }
+        }
+      }
+    },
+    "/tracking/reject/{solicitorID}/{deal_id}": {
+      "post": {
+        "summary": "Reject an instruction for a solicitor",
+        "operationId": "rejectInstruction",
+        "tags": ["Tracking"],
+        "security": [
+          {
+            "AuthorizationHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "solicitorID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "deal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Instruction rejected"
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -165,7 +241,7 @@
                 "enum": ["Leasehold", "Freehold"]
               },
               "property_value": {
-                "type": "string"
+                "type": "number"
               },
               "transaction_address_data": {
                 "type": "object",
@@ -233,10 +309,10 @@
                 "required": ["vat", "total"],
                 "properties": {
                   "vat": {
-                    "type": "string"
+                    "type": "number"
                   },
                   "total": {
-                    "type": "string"
+                    "type": "number"
                   }
                 }
               }
@@ -247,10 +323,10 @@
             "required": ["legal_fees_total", "additional_fees_total"],
             "properties": {
               "legal_fees_total": {
-                "type": "string"
+                "type": "number"
               },
               "additional_fees_total": {
-                "type": "string"
+                "type": "number"
               },
               "additional_fees": {
                 "type": "array",
