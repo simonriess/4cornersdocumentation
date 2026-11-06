@@ -38,13 +38,19 @@
         ],
         "responses": {
           "200": {
-            "description": "Property onboarding data sets for the solicitor",
+            "description": "Pending (instructed but not yet accepted) instructions for the solicitor",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/InstructionPollData"
+                  "type": "object",
+                  "required": ["pendingInstructions"],
+                  "properties": {
+                    "pendingInstructions": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InstructionPollData"
+                      }
+                    }
                   }
                 }
               }
@@ -81,7 +87,8 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Quote reference"
           }
         ],
         "requestBody": {
@@ -106,6 +113,9 @@
           },
           "401": {
             "description": "Missing or invalid Authorization header"
+          },
+          "404": {
+            "description": "No quote with this reference instructed to the solicitor"
           }
         }
       }
@@ -300,7 +310,9 @@
             "type": "boolean"
           },
           "quote_pdf_s3key": {
-            "type": "string"
+            "type": "string",
+            "format": "uri",
+            "description": "Pre-signed URL to the quote PDF, valid for 5 minutes"
           },
           "client_details": {
             "type": "array",
